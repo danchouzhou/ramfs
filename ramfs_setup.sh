@@ -66,7 +66,7 @@ echo "Preparing boot files ..."
 echo "Packing rootfs ..."
 mkdir -p /bootfiles
 mount -t tmpfs -o size=2G tmpfs /tmp
-tar zcvf /tmp/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles/*' --one-file-system /
+tar zcvf /tmp/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system /
 cp /tmp/rootfs.tar.gz /bootfiles/rootfs.tar.gz
 
 echo "Copying Linux kernel ..."
