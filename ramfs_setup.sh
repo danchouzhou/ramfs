@@ -65,9 +65,7 @@ echo 'Defaults lecture = always' | tee -a /etc/sudoers.d/privacy
 echo "Preparing boot files ..."
 echo "Packing rootfs ..."
 mkdir -p /bootfiles
-mount -t tmpfs -o size=2G tmpfs /tmp
-tar zcvf /tmp/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system /
-cp /tmp/rootfs.tar.gz /bootfiles/rootfs.tar.gz
+tar zcvf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system /
 
 echo "Copying Linux kernel ..."
 cp /boot/vmlinuz-`uname -r` /bootfiles/vmlinuz-`uname -r`
