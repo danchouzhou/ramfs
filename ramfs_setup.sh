@@ -99,11 +99,11 @@ sed -in '/enp/d' /etc/network/interfaces
 
 for i in $(ip link show | grep enp | cut -f2 -d' ' | sed 's/://g'); do
 	echo "" >> /etc/network/interfaces
-	echo "auto ${i}" >> /etc/network/interfaces
-	echo "allow-hotplug ${i}" >> /etc/network/interfaces
-	echo "iface ${i} inet dhcp" >> /etc/network/interfaces
-	if ! ethtool ${i} | grep -sq 'Supports Wake-on: d'; then
-		echo "up ethtool -s ${i} wol g" >> /etc/network/interfaces
+	echo "auto \${i}" >> /etc/network/interfaces
+	echo "allow-hotplug \${i}" >> /etc/network/interfaces
+	echo "iface \${i} inet dhcp" >> /etc/network/interfaces
+	if ! ethtool \${i} | grep -sq 'Supports Wake-on: d'; then
+		echo "up ethtool -s \${i} wol g" >> /etc/network/interfaces
 	fi
 done
 
