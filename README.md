@@ -15,16 +15,20 @@ sudo ./ramfs_setup.sh
 Assume that your boot partition is /dev/sdb1
 ```
 # Mount boot partition to /boot
+sudo umount /boot/efi
 sudo umount /boot
 sudo mount /dev/sdb1 /boot
 
 # Copy the boot files
-sudo cp /bootfiles/* /boot
+sudo mkdir /boot/EFI
+sudo cp /bootfiles/* /boot/EFI
 
 # Install GRUB
-sudo grub-install /dev/sdb
+sudo grub-install --target=x86_64-efi --removable --efi-directory=/boot --boot-directory=/boot/EFI /dev/sdb
+sudo grub-install --target=i386-pc --removable --root-directory=/boot/EFI --boot-directory=/boot/EFI /dev/sdb
 
 # Create GRUB boot menu
+sudo mount --bind /boot/EFI/ /boot/
 sudo update-grub
 
 # Check UUID of your boot partition
@@ -34,6 +38,9 @@ sudo blkid
 sudo nano /boot/grub/grub.cfg
 
 # Unmount and your disk is ready to boot!
+# Binded /boot/EFI
+sudo umount /boot
+# Actual /boot
 sudo umount /boot
 ```
 ### Read this article for more detail
