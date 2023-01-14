@@ -220,8 +220,18 @@ local_mount_root()
 	mount -t ${FSTYPE} ${ROOT} /mount
 	mount -t tmpfs -o size=95% none ${rootmnt}
 	cd ${rootmnt}
-	echo "Find and execute _init.sh ..."
-	find /mount -name _init.sh -exec {} \;
+	echo "Find and execute init.sh ..."
+	if test -f /mount/init.sh; then
+		cp /mount/init.sh .
+		./init.sh
+		rm init.sh
+	elif test -f /mount/EFI/init.sh; then
+		cp /mount/EFI/init.sh .
+		./init.sh
+		rm init.sh
+	else
+		find /mount -name init.sh -exec {} \;
+	fi
 # 	mount ${roflag} ${FSTYPE:+-t "${FSTYPE}"} ${ROOTFLAGS} "${ROOT}" "${rootmnt?}"
 # 	mountroot_status="$?"
 # 	if [ "$LOOP" ]; then

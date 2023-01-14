@@ -22,7 +22,7 @@ update-grub
 echo "Install additional software ..."
 apt update
 # basic system utilities
-apt install htop screen nano wget bash-completion dosfstools exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
+apt install htop screen nano wget bash-completion eject dosfstools exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
 # xfce enviroment
 apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs redshift --no-install-recommends -y
 # language
@@ -135,16 +135,17 @@ echo "Building initramfs ..."
 mkinitramfs -o /bootfiles/initrd.img-`uname -r`
 
 echo "Generating initramfs script ..."
-cat << EOF > /bootfiles/_init.sh
+cat << EOF > /bootfiles/init.sh
 #!/bin/sh
 
 echo "Copying start.sh ..."
 cp /mount/EFI/start.sh .
 echo "Copying rootfs.tar.gz ..."
 cp /mount/EFI/rootfs.tar.gz .
+echo "Unmount boot device ..."
 umount /mount
-echo "Extracting from rootfs.tar.gz ..."
-tar zxvf rootfs.tar.gz
+echo -n "Extracting from rootfs.tar.gz ..."
+tar zxf rootfs.tar.gz --checkpoint=.5000
 rm rootfs.tar.gz
 EOF
 
