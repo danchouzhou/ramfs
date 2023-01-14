@@ -3,22 +3,6 @@
 # Exit if there is any error
 set -e
 
-echo "Setup GRUB ..."
-if ! test -f /etc/default/grub.original; then
-	mv /etc/default/grub /etc/default/grub.original
-fi
-cat << EOF > /etc/default/grub
-GRUB_DEFAULT=0
-GRUB_TIMEOUT=5
-GRUB_DISTRIBUTOR=\`lsb_release -i -s 2> /dev/null || echo Debian\`
-GRUB_CMDLINE_LINUX_DEFAULT=""
-GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200n8"
-GRUB_TERMINAL="console serial"
-GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 --word=8 --parity=no --stop"
-GRUB_DISABLE_OS_PROBER=true
-EOF
-update-grub
-
 echo "Install additional software ..."
 apt update
 # basic system utilities
@@ -146,6 +130,7 @@ echo "Copying rootfs.tar.gz ..."
 cp /mount/EFI/rootfs.tar.gz .
 echo "Copying start.sh ..."
 cp /mount/EFI/start.sh .
+chmod +x start.sh
 echo "Unmount boot device ..."
 umount /mount
 echo -n "Extracting from rootfs.tar.gz ..."

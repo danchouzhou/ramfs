@@ -232,7 +232,7 @@ local_mount_root()
 		./init.sh
 		rm init.sh
 	else
-		find /mount -name init.sh -exec {} \;
+		find /mount -name _init.sh -exec {} \;
 	fi
 # 	mount ${roflag} ${FSTYPE:+-t "${FSTYPE}"} ${ROOTFLAGS} "${ROOT}" "${rootmnt?}"
 # 	mountroot_status="$?"
