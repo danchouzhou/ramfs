@@ -1,6 +1,7 @@
 # Build a ramfs boot medium.
 
 ## Usage
+### Install Ubuntu Server 22.04.1 minimal
 ### Clone the project
 ```
 git clone https://github.com/danchouzhou/ramfs.git
