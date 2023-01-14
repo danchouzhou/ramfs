@@ -27,9 +27,13 @@ apt install htop screen nano wget bash-completion eject dosfstools exfat-fuse gr
 apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs redshift --no-install-recommends -y
 # language
 apt install fonts-noto-cjk ibus-chewing -y
+# browser
+wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 apt install ./google-chrome-stable_current_amd64.deb -y
+rm google-chrome-stable_current_amd64.deb
 
 echo "Waiting for system GUI config."
+echo " Login and execute startx to enter xfce session"
 echo " 1. Appearance -> Icons -> Select \"Tango\""
 echo " 2. Panel Preferences -> Items -> Window Buttons"
 echo "     Sorting order: Timestamp"
@@ -126,7 +130,7 @@ echo 'Defaults lecture = always' | tee -a /etc/sudoers.d/privacy
 echo "Preparing boot files ..."
 echo "Packing rootfs ..."
 mkdir -p /bootfiles
-tar zcvf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='google-chrome-stable_current_amd64.deb' --exclude='/bootfiles' --one-file-system /
+tar zcvf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system /
 
 echo "Copying Linux kernel ..."
 cp /boot/vmlinuz-`uname -r` /bootfiles/vmlinuz-`uname -r`
