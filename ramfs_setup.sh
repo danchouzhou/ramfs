@@ -24,7 +24,7 @@ apt update
 # basic system utilities
 apt install htop screen nano wget bash-completion eject dosfstools exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
 # xfce enviroment
-apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs redshift --no-install-recommends -y
+apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs redshift blueman bluetooth --no-install-recommends -y
 # language
 apt install fonts-noto-cjk ibus-chewing -y
 # browser
