@@ -142,10 +142,10 @@ echo "Generating initramfs script ..."
 cat << EOF > /bootfiles/init.sh
 #!/bin/sh
 
-echo "Copying start.sh ..."
-cp /mount/EFI/start.sh .
 echo "Copying rootfs.tar.gz ..."
 cp /mount/EFI/rootfs.tar.gz .
+echo "Copying start.sh ..."
+cp /mount/EFI/start.sh .
 echo "Unmount boot device ..."
 umount /mount
 echo -n "Extracting from rootfs.tar.gz ..."

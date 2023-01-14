@@ -223,10 +223,12 @@ local_mount_root()
 	echo "Find and execute init.sh ..."
 	if test -f /mount/init.sh; then
 		cp /mount/init.sh .
+		chmod +x init.sh
 		./init.sh
 		rm init.sh
 	elif test -f /mount/EFI/init.sh; then
 		cp /mount/EFI/init.sh .
+		chmod +x init.sh
 		./init.sh
 		rm init.sh
 	else
