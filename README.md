@@ -29,8 +29,25 @@ sudo grub-install --target=x86_64-efi --removable --efi-directory=/boot --boot-d
 sudo grub-install --target=i386-pc --removable --root-directory=/boot/EFI --boot-directory=/boot/EFI /dev/sdb
 
 # Create GRUB boot menu
-sudo mount --bind /boot/EFI/ /boot/
-sudo update-grub
+sudo nano /boot/EFI/grub/grub.cfg
+
+set timeout=5
+
+set menu_color_normal=white/black
+set menu_color_highlight=black/light-gray
+
+probe -u $root --set=boot_uuid
+
+menuentry "Ubuntu" {
+	linux	/EFI/vmlinuz-5.15.0-57-generic root=UUID=$boot_uuid ro console=tty0
+	initrd	/EFI/initrd.img-5.15.0-57-generic
+}
+grub_platform
+if [ "$grub_platform" = "efi" ]; then
+menuentry 'UEFI Firmware Settings' {
+	fwsetup
+}
+fi
 
 # Check UUID of your boot partition
 sudo blkid
