@@ -28,7 +28,8 @@ sudo grub-install --target=i386-pc --removable --root-directory=/mnt/EFI --boot-
 
 # Create GRUB boot menu
 sudo nano /mnt/EFI/grub/grub.cfg
-
+```
+```
 set timeout=5
 
 set menu_color_normal=white/black
@@ -46,7 +47,8 @@ menuentry 'UEFI Firmware Settings' {
 	fwsetup
 }
 fi
-
+```
+```
 # Unmount and your disk is ready to boot!
 sudo umount /mnt
 ```
@@ -72,7 +74,8 @@ cp /usr/lib/grub/i386-pc/* iso/boot/grub/i386-pc/
 
 # Create GRUB boot menu
 nano iso/boot/grub/grub.cfg
-
+```
+```
 set timeout=5
 
 set menu_color_normal=white/black
@@ -90,7 +93,8 @@ menuentry 'UEFI Firmware Settings' {
 	fwsetup
 }
 fi
-
+```
+```
 # Create disk image
 sudo xorriso -as mkisofs -r \
   -V Ubuntu-22.04 \
