@@ -24,7 +24,7 @@ sudo cp /bootfiles/* /mnt/EFI
 
 # Install GRUB
 sudo grub-install --target=x86_64-efi --removable --efi-directory=/mnt --boot-directory=/mnt/EFI /dev/sdb
-sudo grub-install --target=i386-pc --removable --root-directory=/mnt/EFI --boot-directory=/mnt/EFI /dev/sdb
+sudo grub-install --target=i386-pc --root-directory=/mnt/EFI --boot-directory=/mnt/EFI /dev/sdb
 
 # Create GRUB boot menu
 sudo nano /mnt/EFI/grub/grub.cfg
