@@ -109,4 +109,16 @@ sudo xorriso -as mkisofs -r \
 - Debian 11.5 (bullseye)
 
 ## Reference
-[Specifications | Unified Extensible Firmware Interface Forum](https://uefi.org/specifications)
+- [Specifications | Unified Extensible Firmware Interface Forum](https://uefi.org/specifications)
+- [Ubuntu Manpage: grub-install - install GRUB to a device](https://manpages.ubuntu.com/manpages/jammy/man8/grub-install.8.html)
+- [Ubuntu Manpage: grub-mkrescue - make a GRUB rescue image](https://manpages.ubuntu.com/manpages/jammy/en/man1/grub-mkrescue.1.html)
+- [Ubuntu Manpage: grub-mkimage - make a bootable image of GRUB](https://manpages.ubuntu.com/manpages/jammy/man1/grub-mkimage.1.html)
+- [Ubuntu Manpage: grub-mkstandalone - make a memdisk-based GRUB image](https://manpages.ubuntu.com/manpages/jammy/man1/grub-mkstandalone.1.html)
+- [硬碟多重開機與BootLoader - 餃子海盜股份有限公司](https://sites.google.com/site/gyozapriate/Home/linux-island/boot/hdd-boot-multi)
+- [玩具烏托邦: 製作 UEFI 開機光碟 iso 映像檔](https://newtoypia.blogspot.com/2020/11/uefi-iso.html)
+- [8.4. 使用 GRUB 设定引导过程](https://lfs.xry111.site/zh_CN/8.3/chapter08/grub.html)
+- [GNU GRUB Manual 2.06: Making a GRUB bootable CD-ROM](https://www.gnu.org/software/grub/manual/grub/html_node/Making-a-GRUB-bootable-CD_002dROM.html)
+- [Making a GRUB bootable CD-ROM | GRUB Manual](https://www.gnu.org/software/grub/manual/legacy/Making-a-GRUB-bootable-CD-ROM.html)
+- [Chris's Wiki :: blog/linux/Ubuntu2004ISOWithUEFI](https://utcc.utoronto.ca/~cks/space/blog/linux/Ubuntu2004ISOWithUEFI)
+- [Installing GRUB on an hybrid BIOS/UEFI stick](https://www.normalesup.org/~george/comp/live_iso_usb/grub_hybrid.html)
+- [E.2.2. GRUB and the Boot Process on UEFI-based x86 Systems Red Hat Enterprise Linux 6 | Red Hat Customer Portal](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/installation_guide/s2-grub-whatis-booting-uefi)
