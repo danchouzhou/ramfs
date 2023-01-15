@@ -110,7 +110,12 @@ sudo xorriso -as mkisofs -r \
 [Build a RAM based filesystem server | Danny’s tech blog](https://danchouzhou.github.io/2022/10/31/ram-based-rootfs-server.html)
 
 ## Tested distributions
-- Debian 11.5 (bullseye)
+- Ubuntu Server 22.04.1
+
+## Tested hardware
+- Gigabyte B550M AORUS PRO-P / Ryzen 7 5700G CSM EFI, CSM Legacy, EFI Non-secure, EFI secure boot
+- Gigabyte GA-J1800N-D2H CSM EFI, CSM Legacy, EFI Non-secure, EFI secure boot
+- Acer Aspire E1-430 EFI secure boot, Legacy
 
 ## Reference
 - [Specifications | Unified Extensible Firmware Interface Forum](https://uefi.org/specifications)
