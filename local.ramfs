@@ -172,11 +172,25 @@ local_mount_root()
 	# if ! mount ${roflag} ${FSTYPE:+-t "${FSTYPE}"} ${ROOTFLAGS} "${ROOT}" "${rootmnt?}"; then
 	# 	panic "Failed to mount ${ROOT} as root file system."
 	# fi
+	echo "Mounting filesystem ..."
 	mkdir /mount
 	mount -t ${FSTYPE} ${ROOT} /mount
 	mount -t tmpfs -o size=95% none ${rootmnt}
 	cd ${rootmnt}
-	/mount/init.sh
+	echo "Find and execute init.sh ..."
+	if test -f /mount/init.sh; then
+		cp /mount/init.sh .
+		chmod +x init.sh
+		./init.sh
+		rm init.sh
+	elif test -f /mount/EFI/init.sh; then
+		cp /mount/EFI/init.sh .
+		chmod +x init.sh
+		./init.sh
+		rm init.sh
+	else
+		find /mount -name _init.sh -exec {} \;
+	fi
 }
 
 local_mount_fs()
