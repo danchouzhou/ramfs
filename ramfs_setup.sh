@@ -3,25 +3,17 @@
 # Exit if there is any error
 set -e
 
-# echo "Setup GRUB ..."
-# if ! test -f /etc/default/grub.original; then
-# 	mv /etc/default/grub /etc/default/grub.original
-# fi
-# cat << EOF > /etc/default/grub
-# GRUB_DEFAULT=0
-# GRUB_TIMEOUT=5
-# GRUB_DISTRIBUTOR=\`lsb_release -i -s 2> /dev/null || echo Debian\`
-# GRUB_CMDLINE_LINUX_DEFAULT=""
-# GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200n8"
-# GRUB_TERMINAL="console serial"
-# GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 --word=8 --parity=no --stop"
-# GRUB_DISABLE_OS_PROBER=true
-# EOF
-# update-grub
-
 echo "Install additional software ..."
 apt update
-apt install htop screen wget tcpdump dosfstools exfat-utils mdadm lvm2 linux-cpupower ethtool -y
+# basic system utilities
+apt install htop screen nano wget bash-completion eject dosfstools exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
+# driver
+apt install firmware-iwlwifi firmware-amd-graphics firmware-misc-nonfree -y
+# xfce enviroment
+apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs blueman bluetooth network-manager-gnome --no-install-recommends -y
+apt install pavucontrol -y
+# browser
+apt install chromium --no-install-recommends -y
 apt clean
 
 echo "Customizing initramfs script ..."
@@ -87,13 +79,10 @@ cp /usr/share/initramfs-tools/scripts/local.ramfs /usr/share/initramfs-tools/scr
 cp /etc/initramfs-tools/modules.ramfs /etc/initramfs-tools/modules
 cp /etc/fstab.ramfs /etc/fstab
 
-echo "Always show the sudo lecture ..."
-echo 'Defaults lecture = always' | tee -a /etc/sudoers.d/privacy
-
 echo "Preparing boot files ..."
 echo "Packing rootfs ..."
-mkdir -p /bootfiles
-tar zcvf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system /
+mkdir -p /bootfiles/grub
+tar zcf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system / --checkpoint=.5000
 
 echo "Copying Linux kernel ..."
 cp /boot/vmlinuz-`uname -r` /bootfiles/vmlinuz-`uname -r`
@@ -125,19 +114,56 @@ cat << EOF > /bootfiles/start.sh
 apt-mark hold linux-image* grub*
 
 ## Network ##
-sed -in '/enp/d' /etc/network/interfaces
+# sed -in '/enp/d' /etc/network/interfaces
 
-for i in $(ip link show | grep enp | cut -f2 -d' ' | sed 's/://g'); do
-	echo "" >> /etc/network/interfaces
-	echo "auto \${i}" >> /etc/network/interfaces
-	echo "allow-hotplug \${i}" >> /etc/network/interfaces
-	echo "iface \${i} inet dhcp" >> /etc/network/interfaces
-	if ! ethtool \${i} | grep -sq 'Supports Wake-on: d'; then
-		echo "up ethtool -s \${i} wol g" >> /etc/network/interfaces
-	fi
-done
+# for i in $(ip link show | grep enp | cut -f2 -d' ' | sed 's/://g'); do
+# 	echo "" >> /etc/network/interfaces
+# 	echo "auto \${i}" >> /etc/network/interfaces
+# 	echo "allow-hotplug \${i}" >> /etc/network/interfaces
+# 	echo "iface \${i} inet dhcp" >> /etc/network/interfaces
+# 	if ! ethtool \${i} | grep -sq 'Supports Wake-on: d'; then
+# 		echo "up ethtool -s \${i} wol g" >> /etc/network/interfaces
+# 	fi
+# done
+# systemctl restart networking.service
 
-systemctl restart networking.service
+## Firewall ##
+iptables -F
+iptables -X
+iptables -Z
+iptables -P INPUT DROP
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD DROP
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+ip6tables -F
+ip6tables -X
+ip6tables -Z
+ip6tables -P INPUT DROP
+ip6tables -P OUTPUT ACCEPT
+ip6tables -P FORWARD DROP
+ip6tables -A INPUT -i lo -j ACCEPT
+ip6tables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+EOF
+
+echo "Create GRUB boot menu ..."
+cat << EOF > /bootfiles/grub/grub.cfg
+serial --speed=115200 --unit=0 --word=8 --parity=no --stop
+terminal_input console serial
+terminal_output console serial
+set timeout=5
+probe -u \$root --set=boot_uuid
+menuentry "Debian" {
+	linux	/EFI/vmlinuz-`uname -r` root=UUID=\$boot_uuid ro console=tty0
+	initrd	/EFI/initrd.img-`uname -r`
+}
+grub_platform
+if [ "\$grub_platform" = "efi" ]; then
+menuentry 'UEFI Firmware Settings' {
+	fwsetup
+}
+fi
 EOF
 
 echo "Boot files are ready, restore to original files ..."
