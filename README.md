@@ -33,3 +33,4 @@ sudo umount /mnt
 [Build a RAM based filesystem server | Danny’s tech blog](https://danchouzhou.github.io/2022/10/31/ram-based-rootfs-server.html)
 ## Tested distributions
 - Debian 11.6 (bullseye)
+- Debian 12.4 (bookworm)
