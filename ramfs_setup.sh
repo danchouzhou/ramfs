@@ -6,11 +6,11 @@ set -e
 echo "Install additional software ..."
 apt update
 # basic system utilities
-apt install htop screen nano wget bash-completion eject dosfstools exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
+apt install htop screen nano wget bash-completion eject dosfstools ntfs-3g exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
 # driver
-apt install firmware-iwlwifi firmware-amd-graphics firmware-misc-nonfree -y
+apt install firmware-linux-nonfree firmware-iwlwifi firmware-realtek firmware-atheros -y
 # xfce enviroment
-apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs blueman bluetooth network-manager-gnome --no-install-recommends -y
+apt install xserver-xorg xserver-xorg-core xserver-xorg-video-all xfonts-base xinit x11-xserver-utils xfce4 tango-icon-theme xfce4-terminal thunar-volman gvfs mousepad blueman bluetooth network-manager-gnome --no-install-recommends -y
 apt install pavucontrol -y
 # browser
 apt install chromium --no-install-recommends -y
@@ -82,7 +82,7 @@ cp /etc/fstab.ramfs /etc/fstab
 echo "Preparing boot files ..."
 echo "Packing rootfs ..."
 mkdir -p /bootfiles/grub
-tar zcf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='/bootfiles' --one-file-system / --checkpoint=.5000
+tar zcf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='boot_dvd.sh' --exclude='README.md' --exclude='/bootfiles' --one-file-system / --checkpoint=.5000
 
 echo "Copying Linux kernel ..."
 cp /boot/vmlinuz-`uname -r` /bootfiles/vmlinuz-`uname -r`

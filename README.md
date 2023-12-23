@@ -28,9 +28,19 @@ sudo grub-install --target=i386-pc --root-directory=/mnt/EFI --boot-directory=/m
 # Unmount and your disk is ready to boot!
 sudo umount /mnt
 ```
+### Make a DVD image
+```
+chmod +x boot_dvd.sh
+sudo ./boot_dvd.sh
+```
 
 ## Read this article for more detail
 [Build a RAM based filesystem server | Danny’s tech blog](https://danchouzhou.github.io/2022/10/31/ram-based-rootfs-server.html)
+
 ## Tested distributions
 - Debian 11.6 (bullseye)
 - Debian 12.4 (bookworm)
+
+## Tested hardware
+- Gigabyte B550M AORUS PRO-P / Ryzen 7 5700G CSM EFI, CSM Legacy, EFI Non-secure, EFI secure boot
+- Lenovo T480 (20L5CTO1WW), EFI secure boot
