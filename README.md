@@ -23,7 +23,7 @@ sudo cp -r /bootfiles/* /mnt/EFI
 
 # Install GRUB
 sudo grub-install --target=x86_64-efi --removable --efi-directory=/mnt --boot-directory=/mnt/EFI
-sudo grub-install --target=i386-pc --root-directory=/mnt/EFI --boot-directory=/mnt/EFI /dev/sdb
+sudo grub-install --target=i386-pc --boot-directory=/mnt/EFI /dev/sdb
 
 # Unmount and your disk is ready to boot!
 sudo umount /mnt

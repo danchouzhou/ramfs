@@ -5,7 +5,7 @@ set -e
 
 echo "Install additional software ..."
 apt update
-# basic system utilities
+# system utilities
 apt install htop screen nano wget bash-completion eject dosfstools ntfs-3g exfat-fuse grub-pc-bin mdadm lvm2 iptables net-tools network-manager -y
 # driver
 apt install firmware-linux-nonfree firmware-iwlwifi firmware-realtek firmware-atheros -y
@@ -18,19 +18,19 @@ apt clean
 
 echo "Customizing initramfs script ..."
 if ! test -f /usr/share/initramfs-tools/scripts/local.original; then
-     cp /usr/share/initramfs-tools/scripts/local /usr/share/initramfs-tools/scripts/local.original
+	cp /usr/share/initramfs-tools/scripts/local /usr/share/initramfs-tools/scripts/local.original
 fi
 cp local.ramfs /usr/share/initramfs-tools/scripts/local.ramfs
 
 echo "Adding additional kernel module for FAT and exFAT ..."
 if ! test -f /etc/initramfs-tools/modules.original; then
-     cp /etc/initramfs-tools/modules /etc/initramfs-tools/modules.original
+	cp /etc/initramfs-tools/modules /etc/initramfs-tools/modules.original
 fi
 if ! test -f /etc/initramfs-tools/modules.ramfs; then
-     cp /etc/initramfs-tools/modules /etc/initramfs-tools/modules.ramfs
-     ls /lib/modules/`uname -r`/kernel/fs/fat/ | cut -f1 -d '.' | tee -a /etc/initramfs-tools/modules.ramfs
-     ls /lib/modules/`uname -r`/kernel/fs/exfat/ | cut -f1 -d '.' | tee -a /etc/initramfs-tools/modules.ramfs
-     ls /lib/modules/`uname -r`/kernel/fs/nls/ | cut -f1 -d '.' | tee -a /etc/initramfs-tools/modules.ramfs
+	cp /etc/initramfs-tools/modules /etc/initramfs-tools/modules.ramfs
+	ls /lib/modules/`uname -r`/kernel/fs/fat/ | cut -f1 -d '.' | tee -a /etc/initramfs-tools/modules.ramfs
+	ls /lib/modules/`uname -r`/kernel/fs/exfat/ | cut -f1 -d '.' | tee -a /etc/initramfs-tools/modules.ramfs
+	ls /lib/modules/`uname -r`/kernel/fs/nls/ | cut -f1 -d '.' | tee -a /etc/initramfs-tools/modules.ramfs
 fi
 
 echo "Adding tar binary to initramfs"
@@ -39,13 +39,13 @@ cat << EOF > /usr/share/initramfs-tools/hooks/tar
 PREREQ=""
 prereqs()
 {
-     echo "\$PREREQ"
+	echo "\$PREREQ"
 }
 case \$1 in
 prereqs)
-     prereqs
-     exit 0
-     ;;
+	prereqs
+	exit 0
+	;;
 esac
 . /usr/share/initramfs-tools/hook-functions
 rm -f \${DESTDIR}/bin/tar
@@ -57,7 +57,7 @@ echo "Customizing fstab ..."
 if ! test -f /etc/fstab.original; then
      cp /etc/fstab /etc/fstab.original
 fi
-echo 'none /   tmpfs size=95% 0 0' | tee /etc/fstab.ramfs
+echo 'none / tmpfs size=95% 0 0' | tee /etc/fstab.ramfs
 
 echo "Setup startup.service ..."
 cat << EOF > /etc/systemd/system/startup.service
@@ -82,7 +82,9 @@ cp /etc/fstab.ramfs /etc/fstab
 echo "Preparing boot files ..."
 echo "Packing rootfs ..."
 mkdir -p /bootfiles/grub
-tar zcf /bootfiles/rootfs.tar.gz --exclude='ramfs_setup.sh' --exclude='local.ramfs' --exclude='boot_dvd.sh' --exclude='README.md' --exclude='/bootfiles' --one-file-system / --checkpoint=.5000
+systemctl stop systemd-journald.service
+tar zcf /bootfiles/rootfs.tar.gz --exclude='/home/*/ramfs' --exclude='/bootfiles' --one-file-system / --checkpoint=.5000
+systemctl start systemd-journald.service
 
 echo "Copying Linux kernel ..."
 cp /boot/vmlinuz-`uname -r` /bootfiles/vmlinuz-`uname -r`
@@ -95,14 +97,15 @@ cat << EOF > /bootfiles/init.sh
 #!/bin/sh
 
 echo "Copying rootfs.tar.gz ..."
-cp /mount/EFI/rootfs.tar.gz .
+cp /mnt/EFI/rootfs.tar.gz .
 echo "Copying start.sh ..."
-cp /mount/EFI/start.sh .
+cp /mnt/EFI/start.sh .
 chmod +x start.sh
 echo "Unmount boot device ..."
-umount /mount
+umount /mnt
 echo -n "Extracting from rootfs.tar.gz ..."
 tar zxf rootfs.tar.gz --checkpoint=.5000
+echo
 rm rootfs.tar.gz
 EOF
 
@@ -149,16 +152,15 @@ EOF
 
 echo "Create GRUB boot menu ..."
 cat << EOF > /bootfiles/grub/grub.cfg
-serial --speed=115200 --unit=0 --word=8 --parity=no --stop
+serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1
 terminal_input console serial
 terminal_output console serial
 set timeout=5
 probe -u \$root --set=boot_uuid
 menuentry "Debian" {
-	linux	/EFI/vmlinuz-`uname -r` root=UUID=\$boot_uuid ro console=tty0
+	linux	/EFI/vmlinuz-`uname -r` root=UUID=\$boot_uuid ro console=ttyS0,115200 console=tty0
 	initrd	/EFI/initrd.img-`uname -r`
 }
-grub_platform
 if [ "\$grub_platform" = "efi" ]; then
 menuentry 'UEFI Firmware Settings' {
 	fwsetup
